@@ -1,0 +1,92 @@
+using System;
+
+class ProgramaReservaciones
+{
+    static void Main()
+    {
+        // Arreglo que representa los 10 asientos, inicialmente todos estos están vacíos (false)
+        bool[] asientos = new bool[10];
+        bool vueloCompleto = false;
+
+        while (!vueloCompleto)
+        {
+            Console.WriteLine("Please type 1 for \"smoking\"");
+            Console.WriteLine("Please type 2 for \"nonsmoking\"");
+            int opcion = Convert.ToInt32(Console.ReadLine());
+
+            if (opcion == 1) // Sección de fumar
+            {
+                if (AsignarAsiento(asientos, 0, 5, "Smoking"))
+                {
+                    continue;
+                }
+                else if (ConfirmarCambioSeccion("Smoking"))
+                {
+                    if (!AsignarAsiento(asientos, 5, 10, "Non-Smoking"))
+                    {
+                        Console.WriteLine("Next flight leaves in 3 hours.");
+                        vueloCompleto = VerificarVueloCompleto(asientos);
+                    }
+                }
+            }
+            else if (opcion == 2) // Sección de no fumar
+            {
+                if (AsignarAsiento(asientos, 5, 10, "Non-Smoking"))
+                {
+                    continue;
+                }
+                else if (ConfirmarCambioSeccion("Non-Smoking"))
+                {
+                    if (!AsignarAsiento(asientos, 0, 5, "Smoking"))
+                    {
+                        Console.WriteLine("Next flight leaves in 3 hours.");
+                        vueloCompleto = VerificarVueloCompleto(asientos);
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("Opción inválida. Intente nuevamente.");
+            }
+
+            // Verificar si el vuelo está lleno
+            vueloCompleto = VerificarVueloCompleto(asientos);
+        }
+    }
+
+    // Función para asignar asiento en una sección específica
+    static bool AsignarAsiento(bool[] asientos, int inicio, int fin, string seccion)
+    {
+        for (int i = inicio; i < fin; i++)
+        {
+            if (!asientos[i])
+            {
+                asientos[i] = true;
+                Console.WriteLine($"Boarding pass: Seat {i + 1} - {seccion} section.");
+                return true;
+            }
+        }
+        Console.WriteLine($"{seccion} section is full.");
+        return false;
+    }
+
+    // Función para confirmar si el usuario acepta cambiar de sección
+    static bool ConfirmarCambioSeccion(string seccionActual)
+    {
+        Console.WriteLine($"Would you like to be placed in the other section (not {seccionActual})? (y/n)");
+        char respuesta = Console.ReadKey().KeyChar;
+        Console.WriteLine(); // Para nueva línea después de la entrada
+        return respuesta == 'y' || respuesta == 'Y';
+    }
+
+    // Función para verificar si todos los asientos están llenos
+    static bool VerificarVueloCompleto(bool[] asientos)
+    {
+        foreach (bool ocupado in asientos)
+        {
+            if (!ocupado) return false;
+        }
+        Console.WriteLine("All seats are booked. The next flight leaves in 3 hours.");
+        return true;
+    }
+}
