@@ -1,0 +1,89 @@
+
+using System;
+
+class ProgramaVentas
+{
+    static void Main()
+    {
+        // Inicializar las constantes de número de vendedores y productos
+        const int NUM_VENDEDORES = 4;
+        const int NUM_PRODUCTOS = 5;
+
+        // Crear un arreglo para almacenar las ventas de cada producto por vendedor
+        decimal[,] ventas = new decimal[NUM_PRODUCTOS, NUM_VENDEDORES];
+
+        // Ingreso de los datos de las ventas
+        while (true)
+        {
+            // Solicitar el número de vendedor
+            Console.Write("Ingrese el número del vendedor (1-4) o -1 para terminar: ");
+            int vendedor = int.Parse(Console.ReadLine());
+
+            // Si el número de vendedor es -1, salir del bucle
+            if (vendedor == -1)
+                break;
+
+            // Validar el número de vendedor
+            if (vendedor < 1 || vendedor > NUM_VENDEDORES)
+            {
+                Console.WriteLine("Número de vendedor no válido.");
+                continue;
+            }
+
+            // Solicitar el número de producto
+            Console.Write("Ingrese el número del producto (1-5): ");
+            int producto = int.Parse(Console.ReadLine());
+
+            // Validar el número de producto
+            if (producto < 1 || producto > NUM_PRODUCTOS)
+            {
+                Console.WriteLine("Número de producto no válido.");
+                continue;
+            }
+
+            // Solicitar el valor total vendido del producto
+            Console.Write("Ingrese el valor total en dólares del producto vendido: ");
+            decimal valorVenta = decimal.Parse(Console.ReadLine());
+
+            // Registrar la venta en el arreglo
+            ventas[producto - 1, vendedor - 1] += valorVenta;
+
+            Console.WriteLine("Venta registrada correctamente.\n");
+        }
+
+        // Imprimir el resumen de ventas en formato tabular
+        Console.WriteLine("\nResumen de ventas del mes:\n");
+        Console.WriteLine("Producto\\Vendedor\t1\t2\t3\t4\tTotal Producto");
+
+        // Variables para totalizar las ventas por producto y por vendedor
+        decimal[] totalVendedores = new decimal[NUM_VENDEDORES];
+        decimal totalGeneral = 0;
+
+        // Recorrer cada producto
+        for (int i = 0; i < NUM_PRODUCTOS; i++)
+        {
+            decimal totalProducto = 0;
+            Console.Write($"Producto {i + 1}\t\t");
+
+            // Recorrer cada vendedor y sumar las ventas por producto y vendedor
+            for (int j = 0; j < NUM_VENDEDORES; j++)
+            {
+                Console.Write($"{ventas[i, j]}\t");
+                totalProducto += ventas[i, j];
+                totalVendedores[j] += ventas[i, j];
+            }
+
+            Console.WriteLine($"{totalProducto}");
+            totalGeneral += totalProducto;
+        }
+
+        // Imprimir los totales por vendedor
+        Console.Write("Total Vendedor\t\t");
+        for (int j = 0; j < NUM_VENDEDORES; j++)
+        {
+            Console.Write($"{totalVendedores[j]}\t");
+        }
+
+        Console.WriteLine($"\nTotal General: {totalGeneral}");
+    }
+}
