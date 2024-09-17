@@ -1,0 +1,41 @@
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        Random rand = new Random();
+        int[] sumas = new int[13]; // Arreglo para contar las veces que aparece cada suma (2 a 12)
+
+        // Simulación de 36,000 tiradas
+        for (int i = 0; i < 36000; i++)
+        {
+            int dado1 = rand.Next(1, 7); // Tirada del primer dado (valores entre 1 y 6)
+            int dado2 = rand.Next(1, 7); // Tirada del segundo dado (valores entre 1 y 6)
+            int suma = dado1 + dado2;
+            sumas[suma]++;
+        }
+
+        // Imprimir los resultados en formato tabular
+        Console.WriteLine("Suma\tNúmero de veces");
+        for (int i = 2; i < sumas.Length; i++)
+        {
+            Console.WriteLine($"{i}\t{sumas[i]}");
+        }
+
+        // Verificar si el total de 7 es razonable
+        double proporcionEsperada = 6.0 / 36.0; // Se espera que 1/6 de las tiradas sean 7
+        double proporcionObtenida = (double)sumas[7] / 36000.0;
+        Console.WriteLine($"\nProporción esperada para 7: {proporcionEsperada:P2}");
+        Console.WriteLine($"Proporción obtenida para 7: {proporcionObtenida:P2}");
+
+        if (Math.Abs(proporcionEsperada - proporcionObtenida) < 0.01)
+        {
+            Console.WriteLine("El resultado para 7 es razonable.");
+        }
+        else
+        {
+            Console.WriteLine("El resultado para 7 no es razonable.");
+        }
+    }
+}
